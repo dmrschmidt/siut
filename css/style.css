@@ -1,0 +1,133 @@
+* {
+    font-family: -apple-system, sans-serif;
+}
+
+main > .container {
+    padding: 60px 15px 0;
+}
+
+.footer {
+    background-color: #f5f5f5;
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+/* List group styling */
+
+.list-group-item {
+    user-select: none;
+}
+
+.list-group input[type="radio"] {
+    display: none;
+}
+
+.list-group input[type="radio"] + .list-group-item {
+    cursor: pointer;
+}
+
+.list-group input[type="radio"] + .list-group-item:before {
+    content: "\2022";
+    font-weight: bold;
+    margin-right: 1em;
+}
+
+.list-group.mode-selection input[type="radio"] + .list-group-item:before {
+    content: "";
+    margin-right: 1.5em;
+}
+
+.list-group input[type="radio"] + .list-group-item.red:before {
+    color: red;
+}
+
+.list-group input[type="radio"] + .list-group-item.green:before {
+    color: green;
+}
+
+.list-group input[type="radio"] + .list-group-item.blue:before {
+    color: blue;
+}
+
+.list-group input[type="radio"] + .list-group-item.yellow:before {
+    color: yellow;
+}
+
+.list-group input[type="radio"] + .list-group-item.white:before {
+    color: lightgrey;
+}
+
+.list-group input[type="radio"] + .list-group-item:after {
+    content: "\2713";
+    color: transparent;
+    font-weight: bold;
+    float: right;
+}
+
+.list-group input[type="radio"]:checked + .list-group-item {
+    background-color: #efefef;
+}
+
+.list-group input[type="radio"]:checked + .list-group-item:after {
+    color: inherit;
+}
+
+.list-group-item {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    margin-bottom: 0;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 3px; /* Specified height */
+    background: #212529; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    border-radius: 4px;
+    transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: white; /* Gray background */
+    border: 3px solid #343a40; /* Gray background */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 15px;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #343a40; /* Gray background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+/* status page */
+
+ul.status {
+    list-style-type: none;
+}

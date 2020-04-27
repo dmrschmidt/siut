@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Siut - Illuminated orientation system</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Favicons -->
+    <link rel="icon" href="https://siut.eu/wp-content/uploads/2019/11/cropped-logo-1-32x32.png" sizes="32x32"/>
+
+    <!-- Custom styles for this template -->
+    <link href="./css/style.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column h-100">
+<header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="./index.html">
+            <img src="./img/logo-white.png" height="30" alt="Illuminated orientation system">
+        </a>
+    </nav>
+</header>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    <div class="container">
+
+        <h4 class="mt-3">
+            <a href="index.html">
+                <img src="./img/circle-back.svg" width="30" height="30" alt="back">
+            </a>
+            Illuminated orientation system
+        </h4>
+
+        <form action="./status.html" method="post">
+            <div class="form-group row">
+
+                <!-- Form Part - Color Selection -->
+                <div class="col-md-6 mb-3 mt-3">
+                    <h6>Select a color</h6>
+
+                    <div class="list-group color-selection">
+                        <input type="radio" name="color" value="red" id="color-red"/>
+                        <label class="list-group-item red" for="color-red">Red</label>
+
+                        <input type="radio" name="color" value="green" id="color-green"/>
+                        <label class="list-group-item green" for="color-green">Green</label>
+
+                        <input type="radio" name="color" value="blue" id="color-blue"/>
+                        <label class="list-group-item blue" for="color-blue">Blue</label>
+
+                        <input type="radio" name="color" value="yellow" id="color-yellow"/>
+                        <label class="list-group-item yellow" for="color-yellow">Yellow</label>
+
+                        <input type="radio" name="color" value="white" id="color-white"/>
+                        <label class="list-group-item white" for="color-white">White</label>
+                    </div>
+                </div>
+
+                <!-- Form Part - Mode Selection -->
+                <div class="col-md-6 mt-3">
+                    <h6>Select a mode</h6>
+
+                    <div class="list-group mode-selection">
+                        <input type="radio" name="mode" value="red" id="mode-shining"/>
+                        <label class="list-group-item" for="mode-shining">Shining</label>
+
+                        <input type="radio" name="mode" value="green" id="mode-flash"/>
+                        <label class="list-group-item" for="mode-flash">Flash</label>
+
+                        <input type="radio" name="mode" value="blue" id="mode-fade"/>
+                        <label class="list-group-item" for="mode-fade">Fade</label>
+
+                        <input type="radio" name="mode" value="yellow" id="mode-alternate"/>
+                        <label class="list-group-item" for="mode-alternate">Im Wechsel</label>
+
+                        <input type="radio" name="mode" value="white" id="mode-lauflinks"/>
+                        <label class="list-group-item" for="mode-lauflinks">Lauflinks</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Part - Brightness Selection -->
+            <div class="form-group row mt-5 mb-0">
+                <div class="col-6">
+                    <h6>Select brightness</h6>
+                </div>
+                <div class="col-6 text-right">
+                    <h6 class="brightness-value">Medium</h6>
+                </div>
+            </div>
+
+            <div class="slidecontainer pt-2">
+                <input type="range" min="1" max="3" value="2" class="slider brightness-slider" name="brightness"
+                       id="brightness">
+            </div>
+
+            <!-- Form Bottom - Actions -->
+            <div class="form-group row mt-5">
+                <div class="col-6">
+                    <button type="button" class="reset btn btn-outline-dark btn-block">Reset</button>
+                </div>
+                <div class="col-6">
+                    <input type="submit" class="submit btn btn-dark btn-block" value="Apply">
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer class="footer mt-auto py-3">
+    <div class="container">
+        <span class="text-muted">&copy; 2020 Siut GmbH</span>
+    </div>
+</footer>
+<script src="https://code.jquery.com/jquery-3.5.0.slim.min.js"
+        integrity="sha256-MlusDLJIP1GRgLrOflUQtshyP0TwT/RHXsI1wWGnQhs=" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="./js/scripts.js"></script>
+</body>
+</html>
