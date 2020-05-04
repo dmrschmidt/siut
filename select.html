@@ -29,11 +29,11 @@
 <main role="main" class="flex-shrink-0">
     <div class="container">
 
+        <a href="index.html" class="back-button mt-3">
+            <img src="./img/circle-back.svg" width="30" height="30" alt="back">
+        </a>
         <h4 class="mt-3">
-            <a href="index.html">
-                <img src="./img/circle-back.svg" width="30" height="30" alt="back">
-            </a>
-            Illuminated orientation system
+            <span class="pt-3">Illuminated orientation system</span>
         </h4>
 
         <form action="./status.html" method="post">
@@ -66,20 +66,32 @@
                     <h6>Select a mode</h6>
 
                     <div class="list-group mode-selection">
-                        <input type="radio" name="mode" value="shining" id="mode-shining"/>
-                        <label class="list-group-item" for="mode-shining">Shining</label>
+                        <input type="radio" name="mode" value="line-static" id="mode-line-static"/>
+                        <label class="list-group-item" for="mode-line-static">Linie statisch</label>
 
-                        <input type="radio" name="mode" value="flash" id="mode-flash"/>
-                        <label class="list-group-item" for="mode-flash">Flash</label>
-
-                        <input type="radio" name="mode" value="fade" id="mode-fade"/>
-                        <label class="list-group-item" for="mode-fade">Fade</label>
+                        <input type="radio" name="mode" value="line-flashing" id="mode-line-flashing"/>
+                        <label class="list-group-item" for="mode-line-flashing">Linie blinkend</label>
 
                         <input type="radio" name="mode" value="alternate" id="mode-alternate"/>
-                        <label class="list-group-item" for="mode-alternate">Im Wechsel</label>
+                        <label class="list-group-item" for="mode-alternate">Abwechselnd Leuchtend</label>
+
+                        <input type="radio" name="mode" value="stop-position-1" id="mode-stop-position-1"/>
+                        <label class="list-group-item" for="mode-stop-position-1">Tür / Halteposition 1</label>
+
+                        <input type="radio" name="mode" value="stop-position-2" id="mode-stop-position-2"/>
+                        <label class="list-group-item" for="mode-stop-position-2">Tür / Halteposition 2</label>
+
+                        <input type="radio" name="mode" value="stop-position-3" id="mode-stop-position-3"/>
+                        <label class="list-group-item" for="mode-stop-position-3">Tür / Halteposition 3</label>
 
                         <input type="radio" name="mode" value="lauflinks" id="mode-lauflinks"/>
-                        <label class="list-group-item" for="mode-lauflinks">Lauflinks</label>
+                        <label class="list-group-item" for="mode-lauflinks">Lauflicht Links</label>
+
+                        <input type="radio" name="mode" value="laufrechts" id="mode-laufrechts"/>
+                        <label class="list-group-item" for="mode-laufrechts">Lauflicht Rechts</label>
+
+                        <input type="radio" name="mode" value="circle" id="mode-circle"/>
+                        <label class="list-group-item" for="mode-circle">Kreislauf</label>
                     </div>
                 </div>
             </div>
@@ -101,10 +113,10 @@
 
             <!-- Form Bottom - Actions -->
             <div class="form-group row mt-5">
-                <div class="col-6">
+                <div class="col-6 reset-col">
                     <button type="button" class="reset btn btn-outline-dark btn-block">Reset</button>
                 </div>
-                <div class="col-6">
+                <div class="col-6 submit-col">
                     <input type="submit" class="submit btn btn-dark btn-block" value="Apply">
                 </div>
             </div>

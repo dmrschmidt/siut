@@ -15,6 +15,22 @@ main > .container {
     padding-left: 15px;
 }
 
+.back-button {
+    display: block;
+}
+
+.keep-together {
+    white-space: nowrap;
+}
+
+h1 {
+    font-size: 30px !important;
+}
+
+h4 {
+    font-size: 24px !important;
+}
+
 /* List group styling */
 
 .list-group-item {
@@ -38,6 +54,7 @@ main > .container {
 .list-group.mode-selection input[type="radio"] + .list-group-item:before {
     content: "";
     margin-right: 1.5em;
+    margin-left: -21px;
 }
 
 .list-group input[type="radio"] + .list-group-item.red:before {
@@ -122,12 +139,30 @@ main > .container {
 .slider::-moz-range-thumb {
     width: 25px; /* Set a specific slider handle width */
     height: 25px; /* Slider handle height */
-    background: #343a40; /* Gray background */
     cursor: pointer; /* Cursor on hover */
+    background: white; /* Gray background */
+    border: 3px solid #343a40; /* Gray background */
+    border-radius: 15px;
+}
+
+.reset-col {
+    padding-right: 3px;
+}
+
+.submit-col {
+    padding-left: 3px;
 }
 
 /* status page */
 
 ul.status {
     list-style-type: none;
+}
+
+.status-screen h4 {
+    margin-right: 10px;
+}
+
+.custom-switch {
+    padding-top: 9px;
 }
