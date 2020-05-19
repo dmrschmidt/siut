@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Siut - Illuminated orientation system</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="./bootstrap.min.css">
+
+    <!-- Favicons -->
+    <link rel="icon" href="./cropped-logo-1-32x32.png" sizes="32x32"/>
+
+    <!-- Custom styles for this template -->
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column h-100">
+<header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="./index.html">
+            <img src="./logo-white.png" height="30" alt="Illuminated orientation system">
+        </a>
+    </nav>
+</header>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    <div class="container">
+
+        <a href="index.html" class="back-button mt-3">
+            <img src="./circle-back.png" width="30" height="30" alt="back">
+        </a>
+        <h4 class="mt-3">
+            <span class="pt-3">Illuminated orientation system</span>
+        </h4>
+
+        <form action="./status.html" id="form1">
+            <div class="form-group row">
+
+                <!-- Form Part - Color Selection -->
+                <div class="col-md-6 mb-3 mt-3">
+                    <h6>Select a color</h6>
+
+                    <div class="list-group color-selection">
+                        <input type="radio" name="color" value="red" id="color-red"/>
+                        <label class="list-group-item red" for="color-red">Red</label>
+
+                        <input type="radio" name="color" value="green" id="color-green"/>
+                        <label class="list-group-item green" for="color-green">Green</label>
+
+                        <input type="radio" name="color" value="blue" id="color-blue"/>
+                        <label class="list-group-item blue" for="color-blue">Blue</label>
+
+                        <input type="radio" name="color" value="yellow" id="color-yellow"/>
+                        <label class="list-group-item yellow" for="color-yellow">Yellow</label>
+
+                        <input type="radio" name="color" value="white" id="color-white"/>
+                        <label class="list-group-item white" for="color-white">White</label>
+                    </div>
+                </div>
+
+                <!-- Form Part - Mode Selection -->
+                <div class="col-md-6 mt-3">
+                    <h6>Select a mode</h6>
+
+                    <div class="list-group mode-selection">
+                        <input type="radio" name="mode" value="line-static" id="mode-line-static"/>
+                        <label class="list-group-item" for="mode-line-static">Linie statisch</label>
+
+                        <input type="radio" name="mode" value="line-flashing" id="mode-line-flashing"/>
+                        <label class="list-group-item" for="mode-line-flashing">Linie blinkend</label>
+
+                        <input type="radio" name="mode" value="alternate" id="mode-alternate"/>
+                        <label class="list-group-item" for="mode-alternate">Abwechselnd Leuchtend</label>
+
+                        <input type="radio" name="mode" value="stop-position-1" id="mode-stop-position-1"/>
+                        <label class="list-group-item" for="mode-stop-position-1">Tür / Halteposition 1</label>
+
+                        <input type="radio" name="mode" value="stop-position-2" id="mode-stop-position-2"/>
+                        <label class="list-group-item" for="mode-stop-position-2">Tür / Halteposition 2</label>
+
+                        <input type="radio" name="mode" value="stop-position-3" id="mode-stop-position-3"/>
+                        <label class="list-group-item" for="mode-stop-position-3">Tür / Halteposition 3</label>
+
+                        <input type="radio" name="mode" value="lauflinks" id="mode-lauflinks"/>
+                        <label class="list-group-item" for="mode-lauflinks">Lauflicht Links</label>
+
+                        <input type="radio" name="mode" value="laufrechts" id="mode-laufrechts"/>
+                        <label class="list-group-item" for="mode-laufrechts">Lauflicht Rechts</label>
+
+                        <input type="radio" name="mode" value="circle" id="mode-circle"/>
+                        <label class="list-group-item" for="mode-circle">Kreislauf</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Part - Brightness Selection -->
+            <div class="form-group row mt-5 mb-0">
+                <div class="col-6">
+                    <h6>Select brightness</h6>
+                </div>
+                <div class="col-6 text-right">
+                    <h6 class="brightness-value">Medium</h6>
+                </div>
+            </div>
+
+            <div class="slidecontainer pt-2">
+                <input type="range" min="1" max="3" value="2" class="slider brightness-slider" name="brightness"
+                       id="brightness">
+            </div>
+             </form>
+            <!-- Form Bottom - Actions -->
+            <div class="form-group row mt-5">
+                <div class="col-6 reset-col">
+                    <form action="/select.html" id="form2">
+
+                     <input type="submit" name="reset" form="form2" class="reset btn btn-outline-dark btn-block" value="Reset">
+                    </form>
+                </div>
+                <div class="col-6 submit-col">
+                    <input type="submit" form="form1" class="submit btn btn-dark btn-block" value="Apply">
+               </div>
+           </div>
+
+    </div>
+</main>
+<footer class="footer mt-auto py-3">
+    <div class="container">
+        <span class="text-muted">&copy; 2020 Siut GmbH</span>
+    </div>
+</footer>
+<script src="./jquery-3.5.0.slim.min.js"></script>
+<script src="./bootstrap.min.js"></script>
+<script src="./scripts.js"></script>
+</body>
+</html>

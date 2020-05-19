@@ -1,0 +1,173 @@
+/*********
+  Rui Santos
+  Complete project details at https://randomnerdtutorials.com  
+*********/
+
+// Import required libraries
+#include "WiFi.h"
+#include "ESPAsyncWebServer.h"
+#include "SPIFFS.h"
+
+// Replace with your network credentials
+const char* ssid = "SSID";
+const char* password = "123456789";
+
+// Create AsyncWebServer object on port 80
+AsyncWebServer server(80);
+
+
+ 
+void setup(){
+  // Serial port for debugging purposes
+  Serial.begin(115200);
+  
+
+  // Initialize SPIFFS
+  if(!SPIFFS.begin(true)){
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+
+
+// other way to connenct.......
+ WiFi.softAP(ssid, password);
+
+  IPAddress IP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(IP);
+// end other way to connect#########
+
+// html ...............................
+  // Route for root / web page
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/index.html", "text/html");
+  });
+
+ //  web page index
+  server.on("/index.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/index.html", "text/html");
+  });
+
+/*
+   //  web page select
+  server.on("/select.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/select.html", "text/html");
+  });
+
+//  web page status.html
+  server.on("/status.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/status.html", "text/html");
+  });
+*/
+  // end html ####################################
+
+
+  
+// css ............................................
+  // Route to load style.css file
+  server.on("/css/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/style.css", "text/css");
+  });
+  
+// Route to load component-custom-switch.css file
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/component-custom-switch.css", "text/css");
+  });
+// end css############################################
+
+
+
+
+// img....................................................
+   // Route for  logo image
+    server.on("/img/logo-white.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS,"/logo-white.png", "image/png");
+  });
+
+   
+
+// Route for  circle-back image
+server.on("/img/circle-back.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS,"/circle-back.png", "image/png");
+  });
+  
+
+
+// Route for  favicon image
+server.on("/img/favicon.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS,"/favicon.png", "image/png");
+  });
+  
+
+ // Route for logo-dark image
+ server.on("/img/logo-dark.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS,"/logo-dark.png", "image/png");
+  });
+
+// end img ######################################################
+
+// js........................................
+// Route for scripts.js
+  server.on("/js/scripts.js", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/scripts.js", "text/js");
+  });
+  
+// end img ######################################################
+
+
+  // Send a GET request to <ESP_IP>/get?input1=<inputMessage>
+  server.on("/status.html", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    String input_color;
+    String input_mode;
+    String input_brightness;
+    String inputParam;
+    // GET input1 value on <ESP_IP>/get?input1=<inputMessage>
+    if (request->hasParam("color")) {
+      input_color = request->getParam("color")->value();
+      //inputParam = "color";
+    }
+    // GET input2 value on <ESP_IP>/get?input2=<inputMessage>
+    if (request->hasParam("mode")) {
+      input_mode = request->getParam("mode")->value();
+     // inputParam = PARAM_INPUT_2;
+    }
+// GET input3 value on <ESP_IP>/get?input2=<inputMessage>
+    if (request->hasParam("brightness")) {
+      input_brightness = request->getParam("brightness")->value();
+     // inputParam = PARAM_INPUT_2;
+    }
+
+    Serial.println(input_color);
+    Serial.println(input_mode);
+    Serial.println(input_brightness);
+    
+    /*request->send(200, "text/html", "HTTP GET request sent to your ESP on input field " 
+                                     + input_color + ",,," + input_mode + ",,," + input_brightness +
+                                     "<br><a href=\"/\">Return to Home Page</a>");*/
+                                     
+    request->send(SPIFFS, "/status.html", "text/html");
+  });
+
+  // Send a GET request to <ESP_IP>/get?input1=<inputMessage>
+  server.on("/select.html", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    
+    String inputParam;
+    // GET input1 value on <ESP_IP>/get?input1=<inputMessage>
+    if (request->hasParam("reset")) {
+      //input_color = request->getParam("color")->value();
+      //inputParam = "color";
+      Serial.println("reset");
+    }
+     
+  request->send(SPIFFS, "/select.html", "text/html");
+  });
+
+//  server.onNotFound(notFound);
+  //##################################
+
+  // Start server
+  server.begin();
+}
+ void loop(){
+
+}

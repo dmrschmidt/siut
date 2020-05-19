@@ -1,0 +1,590 @@
+
+ //....................................
+ #include <FastLED.h>
+#include <math.h>
+
+#define LED_PIN     2
+//#define CLOCK_PIN 4 
+#define NUM_LEDS    144  //144
+#define LED_TYPE    WS2812B
+#define COLOR_ORDER GRB
+CRGB leds[NUM_LEDS];
+
+#define BRIGHTNESS  28  // max 256 , example 64
+#define D 4000 // delay
+double brightness =30; 
+double max_brightness=255;
+
+    // Farben 
+    int F_S[3]={0,0,0}; // Schwarz
+    //int F_R[3]={BRIGHTNESS,0,0};// Farbe Rot
+    int F_R[3];
+    //int F_G[3]={0,BRIGHTNESS,0}; // Frabe Grün
+    int F_G[3];
+    //int F_B[3]={0,0,BRIGHTNESS}; // Frabe Blau
+     int F_B[3];
+    //int F_GL[3]={BRIGHTNESS,BRIGHTNESS,0}; // Frabe Gelb
+    int F_GL[3];
+    //int F_W[3]={BRIGHTNESS,BRIGHTNESS,BRIGHTNESS}; // Frabe Weiß
+    int F_W[3];
+    
+    
+    // Anzahl der Pixels in Stein 
+    int np = 36;
+    
+    // für Faeden Variabeln Definieren
+    double h; // aktuelle Helligkeit
+    double t; // Zeit
+
+     // Kreis zwei
+     int SL = 6; // Streiflange
+     int AS=6; // Abstand zwischen Streifen
+     int c_r1=0;  
+ //############################################# 
+ 
+ // Dual Core ..................
+TaskHandle_t Task1;
+
+void CoreTask(void * parameter){
+  while(true) {
+    main_LED_Program();
+    //esp_Leuchten_R(15);
+    //Dynamik_Rechts_1(np, F_R);
+     //Serial.println("h3");
+  }
+}
+// End Dual Core ##############
+// Neopixel Bus .......................
+#include <NeoPixelBus.h>
+
+const uint16_t PixelCount = 36; // this example assumes 4 pixels, making it smaller will cause a failure
+const uint8_t PixelPin = 2;  // make sure to set this to the correct pin, ignored for Esp8266
+
+#define colorSaturation 28
+
+// three element pixels, in different order and speeds
+NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> strip(PixelCount, PixelPin);
+//NeoPixelBus<NeoRgbFeature, Neo400KbpsMethod> strip(PixelCount, PixelPin);
+
+
+
+RgbColor red(colorSaturation, 0, 0);
+RgbColor green(0, colorSaturation, 0);
+RgbColor blue(0, 0, colorSaturation);
+RgbColor white(colorSaturation);
+RgbColor black(0);
+RgbColor yellow(colorSaturation, colorSaturation,0);
+RgbColor white_w(200);
+
+HslColor hslRed(red);
+HslColor hslGreen(green);
+HslColor hslBlue(blue);
+HslColor hslWhite(white);
+HslColor hslBlack(black);
+
+// End Neopixel Bus ####################
+
+//wifi + data browser input data ..................................................
+    String input_color;
+    String input_mode;
+    String input_brightness;
+    String inputParam;
+    bool r;
+
+// Import required libraries
+#include "WiFi.h"
+#include "ESPAsyncWebServer.h"
+#include "SPIFFS.h"
+
+// Replace with your network credentials
+const char* ssid = "SSID";
+const char* password = "123456789";
+
+// Create AsyncWebServer object on port 80
+AsyncWebServer server(80);
+
+
+ 
+void setup(){
+  
+  // NeopixelBus...........................
+   // this resets all the neopixels to an off state
+    strip.Begin();
+    strip.Show();
+
+  // End Neoppixel Bus ####################
+  
+  // Dual Core .....................
+xTaskCreatePinnedToCore(
+    CoreTask,            /* Task function. */
+    "CoreTask",                 /* name of task. */
+    1000,                    /* Stack size of task */
+    NULL,                     /* parameter of the task */
+    1,                        /* priority of the task */
+    &Task1,                   /* Task handle to keep track of created task */
+    0); 
+// End Dual Core #####################
+
+  // Serial port for debugging purposes
+  Serial.begin(115200);
+  
+
+  // Initialize SPIFFS
+  if(!SPIFFS.begin(true)){
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+
+
+// other way to connenct.......
+ WiFi.softAP(ssid, password);
+
+  IPAddress IP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(IP);
+// end other way to connect#########
+
+// html ...............................
+  // Route for root / web page
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/index.html", "text/html");
+  });
+
+ //  web page index
+  server.on("/index.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/index.html", "text/html");
+  });
+
+/*
+   //  web page select
+  server.on("/select.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/select.html", "text/html");
+  });
+
+//  web page status.html
+  server.on("/status.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/status.html", "text/html");
+  });
+*/
+  // end html ####################################
+
+
+  
+// css ............................................
+  // Route to load style.css file
+  server.on("/css/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/style.css", "text/css");
+  });
+  
+// Route to load component-custom-switch.css file
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/component-custom-switch.css", "text/css");
+  });
+// end css############################################
+
+
+
+
+// img....................................................
+   // Route for  logo image
+    server.on("/img/logo-white.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS,"/logo-white.png", "image/png");
+  });
+
+   
+
+// Route for  circle-back image
+server.on("/img/circle-back.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS,"/circle-back.png", "image/png");
+  });
+  
+
+
+// Route for  favicon image
+server.on("/img/favicon.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS,"/favicon.png", "image/png");
+  });
+  
+
+ // Route for logo-dark image
+ server.on("/img/logo-dark.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS,"/logo-dark.png", "image/png");
+  });
+
+// end img ######################################################
+
+// js........................................
+// Route for scripts.js
+  server.on("/js/scripts.js", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/scripts.js", "text/js");
+  });
+  
+// end img ######################################################
+
+
+  // Send a GET request to <ESP_IP>/get?input1=<inputMessage>
+  server.on("/status.html", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    
+    // GET input1 value on <ESP_IP>/get?input1=<inputMessage>
+    if (request->hasParam("color")) {
+      input_color = request->getParam("color")->value();
+      //inputParam = "color";
+    }
+    // GET input2 value on <ESP_IP>/get?input2=<inputMessage>
+    if (request->hasParam("mode")) {
+      input_mode = request->getParam("mode")->value();
+     // inputParam = PARAM_INPUT_2;
+    }
+// GET input3 value on <ESP_IP>/get?input2=<inputMessage>
+    if (request->hasParam("brightness")) {
+      input_brightness = request->getParam("brightness")->value();
+     // inputParam = PARAM_INPUT_2;
+    }
+
+    Serial.println(input_color);
+    Serial.println(input_mode);
+    Serial.println(input_brightness);
+     r=1;
+    
+    /*request->send(200, "text/html", "HTTP GET request sent to your ESP on input field " 
+                                     + input_color + ",,," + input_mode + ",,," + input_brightness +
+                                     "<br><a href=\"/\">Return to Home Page</a>");*/
+                                     
+    request->send(SPIFFS, "/status.html", "text/html");
+  });
+
+  // Send a GET request to <ESP_IP>/get?input1=<inputMessage>
+  server.on("/select.html", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    
+    String inputParam;
+    // GET input1 value on <ESP_IP>/get?input1=<inputMessage>
+    if (request->hasParam("reset")) {
+      //input_color = request->getParam("color")->value();
+      //inputParam = "color";
+      Serial.println("reset");
+      r=0;
+    }
+     
+  request->send(SPIFFS, "/select.html", "text/html");
+  });
+
+//  server.onNotFound(notFound);
+  //##################################
+
+  // Start server
+  server.begin();
+}
+ void loop(){
+
+}
+//mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+// main Led program .........................
+void main_LED_Program(){
+
+  // brightness value 
+ if (input_brightness=="1") {
+  // low
+  brightness=30;
+}
+else if (input_brightness=="2") {
+  // medium
+  brightness=100;
+}
+else if (input_brightness=="3") {
+  // high
+  brightness=255;
+}
+else {
+  // do Thing C
+}
+ 
+  ////Rot
+  F_R[0]=round(255*brightness/max_brightness);
+  F_R[1]=0;
+  F_R[2]=0;
+  //// Grün
+  F_G[0]=0;
+  F_G[1]=round(255*brightness/max_brightness);
+  F_G[2]=0;
+  //// Frabe Blau
+  F_B[0]=0;
+  F_B[1]=0;
+  F_B[2]=round(255*brightness/max_brightness);
+  //// Frabe Gelb
+  F_GL[0]=round(255*brightness/max_brightness);;
+  F_GL[1]=round(255*brightness/max_brightness);
+  F_GL[2]=0;
+  //// Frabe Weiß
+  F_W[0]=round(255*brightness/max_brightness);
+  F_W[1]=round(255*brightness/max_brightness);
+  F_W[2]=round(255*brightness/max_brightness);
+
+// active a programm 
+if (r==0) {
+  // Aus
+  esp_Aus();
+}
+
+ if (r==1) {
+  if (input_color=="red" and input_mode=="line-static") {
+   esp_Leuchten(np,F_R);
+}
+else if (input_color=="green" and input_mode=="line-static") {
+  esp_Leuchten(np,F_G);
+  
+}
+else if (input_color=="blue" and input_mode=="line-static") {
+  esp_Leuchten(np,F_B);
+  
+}
+else if (input_color=="yellow" and input_mode=="line-static") {
+  esp_Leuchten(np,F_GL);
+  
+}
+else if (input_color=="white" and input_mode=="line-static") {
+  esp_Leuchten(np,F_W);
+  
+}
+
+else if (input_color=="red" and input_mode=="line-flashing") {
+ esp_Blinken(np,500,F_R);  
+}
+
+else if (input_color=="green" and input_mode=="line-flashing") {
+ esp_Blinken(np,500,F_G);  
+}
+
+else if (input_color=="blue" and input_mode=="line-flashing") {
+ esp_Blinken(np,500,F_B);  
+}
+
+else if (input_color=="yellow" and input_mode=="line-flashing") {
+ esp_Blinken(np,500,F_GL);  
+}
+
+else if (input_color=="white" and input_mode=="line-flashing") {
+ esp_Blinken(np,500,F_W);  
+}
+else {
+  // do Thing C
+}
+}
+  
+}
+
+// end main led programm ##################
+
+// index function ........
+int index(int i,int N){
+  int n=i;
+  if(i >=N){
+    n=i-N;
+  }// end if 
+  
+ return n; 
+}// end index function #######
+
+/*RgbColor red(colorSaturation, 0, 0);
+strip.SetPixelColor(i,yellow);
+      strip.Show(); */
+
+// Aus (clear) .....................
+void esp_Aus(){
+ for(int i=0;i<PixelCount;i++){
+    strip.SetPixelColor(i,black); 
+    }
+strip.Show();   
+}
+//###########################################
+
+// Leuchten ..............
+////Leuchten
+void esp_Leuchten(int npixl,int* color){ 
+  for(int i=0;i<npixl;i++){
+    strip.SetPixelColor(i,{color[0],color[1],color[2]}); 
+    }
+strip.Show();  
+}
+
+void esp_Blinken(int npixl,int d,int* color){ 
+  for(int i=0;i<npixl;i++){
+    strip.SetPixelColor(i,{color[0],color[1],color[2]}); 
+    }
+    strip.Show(); 
+    delay(d);
+    
+    for(int i=0;i<npixl;i++){
+    strip.SetPixelColor(i,{0,0,0}); 
+    }
+    strip.Show();
+    delay(d);  
+}
+
+//......................................................
+void esp_Dynamik_Links(int n, int* color){
+  // dynamik pixels nacheinander Richtung 2 
+     for(int i=n-1;i>=0;i--){
+      strip.SetPixelColor(i,{color[0],color[1],color[2]});
+       strip.Show();
+       delay(20);
+     }
+     esp_Aus();
+     delay(50);
+     
+     // End dynamik pixels nacheinander Richtung 2
+}
+// End Dynamik_Links #########################################
+
+//......................................................
+void esp_Dynamik_Rechts(int n, int* color){
+  // dynamik pixels nacheinander Richtung 2 
+     for(int i=0;i<n;i++){
+      strip.SetPixelColor(i,{color[0],color[1],color[2]});
+       strip.Show();
+       delay(20);
+     }
+     esp_Aus();
+     delay(50);
+   
+     // End dynamik pixels nacheinander Richtung 2
+}
+// End Dynamik_Links #########################################
+
+
+// Rot Faeden....................
+void esp_Faeden_R(int npixl){
+  // Faeden ................
+   for(int j=0;j<100;j++){
+   h=127.5*sin(0.1*t)+127.5;
+   t=t+0.1;
+   //Serial.println(round(h));
+   
+  for(int i=0;i<npixl;i++){
+    //leds[i].setRGB(0,round(h),0);
+    strip.SetPixelColor(i,{round(h*brightness/100),0,0});   
+    }  
+    strip.Show();
+   }
+   //t=31.4; 
+      
+}
+// End Rot Faeden #########################
+// Rot Faeden....................
+void esp_Faeden(int npixl,int* color){
+  // Faeden ................
+   for(int j=0;j<100;j++){
+   int h0=round(color[0]/2*sin(0.1*t)+color[0]/2);
+   int h1=round(color[1]/2*sin(0.1*t)+color[1]/2);
+   int h2=round(color[2]/2*sin(0.1*t)+color[2]/2); 
+   t=t+0.1;
+   //Serial.println(round(h));
+   
+  for(int i=0;i<npixl;i++){
+    //leds[i].setRGB(0,round(h),0);
+    strip.SetPixelColor(i,{h0,h1,h2});   
+    }  
+    strip.Show();
+   }
+   //t=31.4; 
+      
+}
+// End Rot Faeden #########################
+
+// esp_Leuchten_Stein: bestimmte Stein Leuchten ...................
+void esp_Leuchten_Stein(int sn,int nps,int* color){
+  // sn stein nummer 
+  // nps Anzahl der pixels in dem Stein
+  // F die Farbe 
+  for(int i=sn*nps;i< nps+sn*nps;i++){
+    strip.SetPixelColor(i,{color[0],color[1],color[2]});
+    
+  }
+  strip.Show();
+  
+}
+// End esp_Leuchten_Stein: bestimmte Stein Leuchten #####################
+
+// Leuchten_Steine: Steine Leuchten nacheinander........ 
+void Leuchten_Steine (int sn,int nps,int* color){
+  // sn : Anzahl der Steine
+  for(int i=0;i<sn;i++){
+    esp_Leuchten_Stein(i,nps,color);
+    delay(500);
+  }
+   for(int i=0;i<sn;i++){
+    esp_Leuchten_Stein(i,nps,F_S);    
+  }
+  delay(500);
+}
+//end Leuchten_Steine ##################
+
+// Im_Wechsel.....................
+ void Im_Wechsel(int* color){
+  
+esp_Leuchten_Stein(0,9,color);
+esp_Leuchten_Stein(1,9,F_S);
+esp_Leuchten_Stein(2,9,color);
+esp_Leuchten_Stein(3,9,F_S);
+delay(500);
+esp_Leuchten_Stein(0,9,F_S);
+esp_Leuchten_Stein(1,9,color);
+esp_Leuchten_Stein(2,9,F_S);
+esp_Leuchten_Stein(3,9,color);
+delay(500);
+}
+// end Im_Wechsel ####################
+
+void Halteposition(int* color,int* color2){
+  esp_Leuchten_Stein(1,9,color2);
+  esp_Leuchten_Stein(2,9,color2);
+  for(int i=0;i<9;i++){
+     strip.SetPixelColor(i,{color[0],color[1],color[2]});
+     strip.SetPixelColor(35-i,{color[0],color[1],color[2]});
+     strip.Show();
+     delay(100);
+  }
+  for(int i=0;i<9;i++){
+     strip.SetPixelColor(i,black);
+     strip.SetPixelColor(35-i,black);   
+  }
+  strip.Show();
+  delay(70);
+}
+
+
+// esp_Kreis_zwei..........................................................
+void esp_Kreis_zwei(int* color){
+  // Kreis zwei ......
+  for(int j=0;j<np;j++){
+    //int z=LED_NUM_total-j-1;
+
+    // Richtung 1 von links nach rechts
+    for(int i=0;i<SL;i++){
+    //leds[index(i+j,np)].setRGB(0,255,0);
+    strip.SetPixelColor(index(i+j,np),{color[0],color[1],color[2]});
+ }// end for 1-1
+
+ for(int i=SL;i<SL+AS;i++){
+    //leds[index(i+j,np)].setRGB(0,0,0);
+    strip.SetPixelColor(index(i+j,np),black);
+ }// end for 1-1
+
+ for(int i=SL+AS;i<2*SL+AS;i++){
+    //leds[index(i+j,np)].setRGB(0,255,0);
+    strip.SetPixelColor(index(i+j,np),{color[0],color[1],color[2]});
+ }// end for 1-1
+  
+  //FastLED.show();
+  strip.Show();
+    delay(30);
+    // Richtung 1 clear
+    for(int i=0;i<SL;i++){
+    //leds[index(i+j,np)].setRGB(0,0,0);
+    strip.SetPixelColor(index(i+j,np),black);
+ }// end for 1-2
+  }
+  
+}
+// End kreis_zwei #############################################
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
